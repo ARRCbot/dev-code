@@ -1,0 +1,19 @@
+const FIELD = 'Q4 - Questionnaire';
+const TRUE_BRANCH_TARGET = 'C - Compute Questionnaire 2';
+const FALSE_BRANCH_TARGET = 'RR - How to Identify Triggers';
+const requirement = 'Yes';
+
+/**
+ * ArtiBot Code Handler
+ */
+exports.handler = (artibotContext) => {
+    if (!artibotContext.lead.data[FIELD]) {
+        throw new Error(`Field named ${FIELD} does not exist.`);
+    }
+
+    const status = artibotContext.lead.data[FIELD].value;
+
+    return {
+        branch_to_override: (status == requirement) ? TRUE_BRANCH_TARGET : FALSE_BRANCH_TARGET
+    };
+};
