@@ -1,0 +1,20 @@
+const AGE_FIELD = 'Q - Age? 2';
+const OVER_BRANCH_TARGET = 'S - Crisis Text Line';
+const UNDER_BRANCH_TARGET = 'Q - Similar Teen TL?';
+
+/**
+ * ArtiBot Code Handler
+ */
+exports.handler = (artibotContext) => {
+    if (!artibotContext.lead.data[AGE_FIELD]) {
+        throw new Error(`Field named ${AGE_FIELD} does not exist.`);
+    }
+
+    const age = parseInt(artibotContext.lead.data[AGE_FIELD].value, 10);
+
+    return {
+        branch_to_override: (age > 19)
+            ? OVER_BRANCH_TARGET
+            : UNDER_BRANCH_TARGET
+    };
+};
