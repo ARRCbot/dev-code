@@ -1,0 +1,19 @@
+const FIELD = 'Q - Panic Attack?';
+const TRUE_BRANCH_TARGET = 'Q - Grounding Exercises Alrdy?';
+const FALSE_BRANCH_TARGET = 'Q - Breathing o Meditation Bm?';
+const requirement = 'Yes';
+
+/**
+ * ArtiBot Code Handler
+ */
+exports.handler = (artibotContext) => {
+    if (!artibotContext.lead.data[FIELD]) {
+        throw new Error(`Field named ${FIELD} does not exist.`);
+    }
+
+    const status = artibotContext.lead.data[FIELD].value;
+
+    return {
+        branch_to_override: (status == requirement) ? TRUE_BRANCH_TARGET : FALSE_BRANCH_TARGET
+    };
+};
