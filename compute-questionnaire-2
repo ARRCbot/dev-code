@@ -1,0 +1,104 @@
+const FIELDQ1 = 'Q1 - Questionnaire';
+const FIELDQ2 = 'Q2 - Questionnaire';
+const FIELDQ3 = 'Q3 - Questionnaire';
+const FIELDQ5 = 'Q5 - Questionnaire';
+const FIELDQ6 = 'Q6 - Questionnaire';
+const FIELDQ7 = 'Q7 - Questionnaire';
+var TARGET = '';
+
+/**
+ * ArtiBot Code Handler
+ */
+exports.handler = (artibotContext) => {
+    let val = 1;
+    
+    const q1 = artibotContext.lead.data[FIELDQ1].value;
+    const q2 = artibotContext.lead.data[FIELDQ2].value;
+    const q3 = artibotContext.lead.data[FIELDQ3].value;
+    const q5 = artibotContext.lead.data[FIELDQ5].value;
+    const q6 = artibotContext.lead.data[FIELDQ6].value;
+
+    if (q1 == 'One-on-one') {
+        val = val * -1;
+    } else if (q1 == "Group help") {
+        val = val * 0;
+    }
+    
+    
+    if (q2 == 'Yes') {
+        val = val * 2;
+    }
+    
+    if (q3 == 'Physical') {
+        val = val * 3;
+    } else if (q3 == "Cognitive") {
+        val = val * 5;
+    } else if (q3 == "Neither") {
+        val = val * 13;
+    }
+    
+    if (q5 == "Counseling") {
+        val = val * 11;
+    }
+    
+    if (q6 == "Just think") {
+        val = val * 17;
+    }
+    
+    if (val == 0) {
+        const q7 = artibotContext.lead.data[FIELDQ7].value;
+        if (q7 == 'Online') {
+            TARGET = 'RR - Online Group Therapy';
+        } else {
+            TARGET = 'RR - In-Person Group Therapy';
+        }
+    }
+    
+    if (val < 0) {
+        const q7 = artibotContext.lead.data[FIELDQ7].value;
+        if (q7 == "In-Person") {
+            val = val * 19;
+        }
+    }
+    
+    if (val < 0 && val % 2 != 0) {
+        TARGET = 'RR - Anxiety Help Lines';
+    }
+    
+    if (val < 0 && val % 2 == 0 && val % 11 == 0 && val % 19 != 0) {
+        TARGET = 'RR - Online Therapist';
+    }
+    
+    if (val < 0 && val % 2 == 0 && val % 11 == 0 && val % 19 == 0) {
+        TARGET = 'RR - In-Person Therapist';
+    }
+    
+    if (val < 0 && val % 2 == 0 && val % 11 != 0 && val % 19 != 0) {
+        TARGET = 'RR - Online Psychiatrist';
+    }
+    
+    if (val < 0 && val % 2 == 0 && val % 11 != 0 && val % 19 == 0) {
+        TARGET = 'RR - In-Person Psychiatrist';
+    }
+    
+    if (val > 0 && val % 13 == 0) {
+        TARGET = 'RR - Grounding Practices';
+    }
+    
+    if (val > 0 && val % 5 == 0 && val % 17 != 0) {
+        TARGET = 'RR - Breathing Exercises - J';
+    }
+    
+    if (val > 0 && val % 5 == 0 && val % 17 == 0) {
+        TARGET = 'RR - Breathing Exercises - M';
+    }
+    
+    if (val > 0 && val % 3) {
+        TARGET = 'RR - Diet & Nutrition';
+    }
+    // TARGET = 'RR - Diet & Nutrition';
+    
+    return {
+        branch_to_override: TARGET
+    };
+};
