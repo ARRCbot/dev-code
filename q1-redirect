@@ -1,0 +1,20 @@
+const FIELD = 'Q1 - Questionnaire';
+const TRUE_BRANCH_TARGET = 'Q7 - Questionnaire';
+const FALSE_BRANCH_TARGET = 'S - Resource Recommendation';
+const requirement1 = 'One-on-one';
+const requirement2 = 'Group help';
+
+/**
+ * ArtiBot Code Handler
+ */
+exports.handler = (artibotContext) => {
+    if (!artibotContext.lead.data[FIELD]) {
+        throw new Error(`Field named ${FIELD} does not exist.`);
+    }
+
+    const status = artibotContext.lead.data[FIELD].value;
+
+    return {
+        branch_to_override: (status == requirement1 || status == requirement2) ? TRUE_BRANCH_TARGET : FALSE_BRANCH_TARGET
+    };
+};
